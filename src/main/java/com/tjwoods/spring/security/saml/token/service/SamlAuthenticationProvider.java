@@ -17,7 +17,7 @@ import java.security.cert.X509Certificate;
 
 public class SamlAuthenticationProvider implements AuthenticationProvider {
 
-    private SamlUserService userService;
+    private final SamlUserService userService;
 
     public SamlAuthenticationProvider(SamlUserService userService) {
         this.userService = userService;
@@ -41,7 +41,7 @@ public class SamlAuthenticationProvider implements AuthenticationProvider {
         if (user == null) {
             throw new BadCredentialsException("无法找到对应用户");
         }
-        return new SamlAuthToken(user, token, user.getAuthorities());
+        return new SamlAuthToken(user, token, user.getAuthorities(), assertion);
     }
 
     @Override

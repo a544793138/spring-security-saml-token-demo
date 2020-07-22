@@ -29,10 +29,11 @@ public class SamlAuthToken extends AbstractAuthenticationToken {
         this.samlObject = toSAMLObject(token);
     }
 
-    public SamlAuthToken(UserDetails principal, String token, Collection<? extends GrantedAuthority> authorities) {
+    public SamlAuthToken(UserDetails principal, String token, Collection<? extends GrantedAuthority> authorities, SAMLObject samlObject) {
         super(authorities);
         this.principal = principal;
         this.token = token;
+        this.samlObject = samlObject;
     }
 
     @Override
