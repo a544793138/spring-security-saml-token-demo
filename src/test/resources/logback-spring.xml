@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender" >
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} [%X{REQUEST_ID}] [%X{SERVICE_NAME}] [%X{CLIENT_HOST}] [%X{CLIENT_DN}] %-40.40logger{39} : %m%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="org.apache.xml.security.utils.DigesterOutputStream" level="DEBUG" />
+
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE" />
+        <!--<appender-ref ref="CONSOLE" />-->
+    </root>
+</configuration>

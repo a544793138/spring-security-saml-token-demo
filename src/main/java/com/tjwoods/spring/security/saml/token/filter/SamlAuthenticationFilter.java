@@ -58,7 +58,7 @@ public class SamlAuthenticationFilter extends OncePerRequestFilter {
             // 从头中获取 token 并封装后交给 AuthenticationManager
             String tokenStr = getToken(request);
             if (StringUtils.isNotBlank(tokenStr)) {
-                // 封装成 AuthenticationToken
+                // TODO 封装成 AuthenticationToken，这里将 token 变为了 Opensaml 中的 SAMLObject 类
                 final SamlAuthToken samlToken = createSamlToken(tokenStr);
                 authResult = this.getAuthenticationManager().authenticate(samlToken);
             } else {
@@ -154,7 +154,6 @@ public class SamlAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private SamlAuthToken createSamlToken(String tokenStr) {
-        // TODO SAML token 的字符串转为 SAML XML 对象，这里先固定
         return new SamlAuthToken(tokenStr);
     }
 }
