@@ -1,5 +1,6 @@
 package com.tjwoods.spring.security.saml.token.config;
 
+import com.tjwoods.spring.security.saml.token.filter.GiveTokenForTestFilter;
 import com.tjwoods.spring.security.saml.token.filter.OptionsRequestFilter;
 import com.tjwoods.spring.security.saml.token.service.SamlAuthenticationProvider;
 import com.tjwoods.spring.security.saml.token.service.SamlUserService;
@@ -45,7 +46,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 new Header("Access-Control-Expose-Headers", "Authorization"))))
                 .and()
                 .addFilterAfter(new OptionsRequestFilter(), CorsFilter.class)
-                .apply(new SamlAuthConfigurer<>()).tokenValidSuccessHandler(samlAuthSuccessHandler()).permissiveRequestUrls("/logout");
+                .addFilterAfter(new GiveTokenForTestFilter(), OptionsRequestFilter.class)
+                .apply(new SamlAuthConfigurer<>())
+                .tokenValidSuccessHandler(samlAuthSuccessHandler())
+                .permissiveRequestUrls("/logout");
 //                .and()
 //                .logout()
 //		        .logoutUrl("/logout")   //默认就是"/logout"
