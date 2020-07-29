@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
@@ -74,7 +75,7 @@ public class XmlAuthUtils {
         return new ByteArrayInputStream(result.getBytes());
     }
 
-    public static X509Certificate parseCert(String cert) throws Exception {
+    public static X509Certificate parseCert(String cert) throws CertificateException {
         CertificateFactory factory = CertificateFactory.getInstance("X509");
         final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64.getDecoder().decode(cert));
         final Certificate publicKeyCert = factory.generateCertificate(byteArrayInputStream);

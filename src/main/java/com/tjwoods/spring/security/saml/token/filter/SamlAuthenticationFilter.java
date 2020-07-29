@@ -45,13 +45,14 @@ public class SamlAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        // 如果是允许不认证的请求，则放行
+        if (permissiveRequest(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // 校验请求的 HTTP 头中是否包含指定的字段。
         if (!requiresAuthentication(request)) {
-            // 如果是允许不认证的请求，则放行
-            if (permissiveRequest(request)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
             // 否则报错，401
             final AuthenticationCredentialsNotFoundException notFoundException = new AuthenticationCredentialsNotFoundException("Can not find SAML token in HTTP header.");
             unsuccessfulAuthentication(request, response, notFoundException);
@@ -64,7 +65,7 @@ public class SamlAuthenticationFilter extends OncePerRequestFilter {
             // 从头中获取 token 并封装后交给 AuthenticationManager
             String tokenStr = getToken(request);
             if (StringUtils.isNotBlank(tokenStr)) {
-                // TODO 封装成 AuthenticationToken，这里将 token 变为了 Opensaml 中的 SAMLObject 类
+                // 封装成 AuthenticationToken，这里将 token 变为了 Opensaml 中的 SAMLObject 类
                 final SamlAuthToken samlToken = createSamlToken(tokenStr);
                 authResult = this.getAuthenticationManager().authenticate(samlToken);
             } else {

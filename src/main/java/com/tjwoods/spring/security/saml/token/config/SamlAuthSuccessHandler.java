@@ -21,6 +21,11 @@ public class SamlAuthSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
+
+        // 将认证状态设置为 true，避免由权限检查再次引起的认证
+        authentication.setAuthenticated(true);
+
+        // 将 token 设置回 HTTP 响应头中，如果不喜欢可以不这样
         final String token = ((SamlAuthToken) authentication).getToken();
         response.setHeader("Authorization", token);
     }

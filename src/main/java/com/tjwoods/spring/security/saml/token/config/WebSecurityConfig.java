@@ -3,7 +3,9 @@ package com.tjwoods.spring.security.saml.token.config;
 import com.tjwoods.spring.security.saml.token.filter.GiveTokenForTestFilter;
 import com.tjwoods.spring.security.saml.token.filter.OptionsRequestFilter;
 import com.tjwoods.spring.security.saml.token.service.SamlAuthenticationProvider;
+import com.tjwoods.spring.security.saml.token.service.SamlProperties;
 import com.tjwoods.spring.security.saml.token.service.SamlUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,9 +30,17 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final SamlProperties samlProperties;
+
+    @Autowired
+    public WebSecurityConfig(SamlProperties samlProperties) {
+        this.samlProperties = samlProperties;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                // 对通过系统第一层拦截后的 URL，进行权限检查，这是第二层拦截
                 .antMatchers("/hello").permitAll()
                 .antMatchers("/user/**").hasRole("USER")
                 .antMatchers("/admin/**").hasRole("ADMIN")
@@ -49,6 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(new GiveTokenForTestFilter(), OptionsRequestFilter.class)
                 .apply(new SamlAuthConfigurer<>())
                 .tokenValidSuccessHandler(samlAuthSuccessHandler())
+                // 允许不进行 SAML token 验证的地址，这是进入系统的第一层拦截
                 .permissiveRequestUrls("/logout");
 //                .and()
 //                .logout()
@@ -67,9 +78,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Bean("samlAuthenticationProvider")
+    @Bean
     protected AuthenticationProvider samlAuthenticationProvider() {
-        return new SamlAuthenticationProvider(samlUserService());
+        return new SamlAuthenticationProvider(samlUserService(), samlProperties);
     }
 
     @Override
@@ -77,7 +88,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new SamlUserService();
     }
 
-    @Bean("samlUserService")
+    @Bean
     protected SamlUserService samlUserService() {
         return new SamlUserService();
     }

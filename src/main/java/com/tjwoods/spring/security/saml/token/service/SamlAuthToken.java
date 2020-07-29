@@ -10,7 +10,6 @@ import org.opensaml.xml.io.UnmarshallerFactory;
 import org.opensaml.xml.parse.BasicParserPool;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -19,7 +18,7 @@ import java.util.Collections;
 
 public class SamlAuthToken extends AbstractAuthenticationToken {
 
-    private UserDetails principal;
+    private SamlUserDetails principal;
     private String token;
     private SAMLObject samlObject;
 
@@ -29,7 +28,7 @@ public class SamlAuthToken extends AbstractAuthenticationToken {
         this.samlObject = toSAMLObject(token);
     }
 
-    public SamlAuthToken(UserDetails principal, String token, Collection<? extends GrantedAuthority> authorities, SAMLObject samlObject) {
+    public SamlAuthToken(SamlUserDetails principal, String token, Collection<? extends GrantedAuthority> authorities, SAMLObject samlObject) {
         super(authorities);
         this.principal = principal;
         this.token = token;
