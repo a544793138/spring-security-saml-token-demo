@@ -1,6 +1,7 @@
 # spring-security-saml-token-demo
+
 结合 spring security，采用 SAML token 的方式进行用户的认证，与正常的 SAML 不一样，只是将 SAML 作为 token 验证的一个例子，如 JWT token 类似。
-demo 中会要求所有请求都需要带有 SAML token（SAML 响应或 SAML 断言），会对 SAML token 进行 SAML 规范的验证（demo 只对 SAML 断言进行验证，包括 SAML 响应中的断言。目前只是验证了摘要和签名，以后会补充 SAML token  的时效验证）
+demo 中会要求所有请求都需要带有 SAML token（SAML 响应或 SAML 断言），会对 SAML token 进行 SAML 规范的验证（demo 只对 SAML 断言进行验证，包括 SAML 响应中的断言。目前验证了摘要、签名、有效期和 Issuer）
 
 ## demo 的设定
 
